@@ -1,8 +1,27 @@
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+  h + ":" + m;
+  var t = setTimeout(startTime, 60000);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
 $(document).ready(function() {
+  
+  startTime();
+  $("#match").hide();
 
   var animating = false;
   var cardsCounter = 0;
-  var numOfCards = 6;
+  var numOfCards = 4;
   var decisionVal = 80;
   var pullDeltaX = 0;
   var deg = 0;
@@ -18,9 +37,14 @@ $(document).ready(function() {
     var likeOpacity = (opacity <= 0) ? 0 : opacity;
     $cardReject.css("opacity", rejectOpacity);
     $cardLike.css("opacity", likeOpacity);
+    $("#clickInfo").hide();
   };
 
   function release() {
+
+    setTimeout(function() {
+      $("#clickInfo").fadeIn();
+    }, 300);
 
     if (pullDeltaX >= decisionVal) {
       $card.addClass("to-right");
@@ -35,8 +59,9 @@ $(document).ready(function() {
         $card.addClass("below").removeClass("inactive to-left to-right");
         cardsCounter++;
         if (cardsCounter === numOfCards) {
-          cardsCounter = 0;
-          $(".demo__card").removeClass("below");
+          $("#match").fadeIn();
+          // cardsCounter = 0;
+          // $(".demo__card").removeClass("below");
         }
       }, 300);
     }
@@ -75,5 +100,13 @@ $(document).ready(function() {
       release();
     });
   });
+
+  $(document).on("click", "#clickInfo", function(e) {
+    $("#cv").attr("src",cardsCounter+".jpg");
+  })
+  
+  $(document).on("click", "#apps", function(e) {
+    $(".demo").addClass("openApp");
+  })
 
 });
